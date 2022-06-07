@@ -83,7 +83,7 @@ Unity Builder Helper provide tools forh build projects, control and fast switchi
 * Add external files to Android build
 * Build project
 
-### Features with Unity Builder Bot
+### Features with Unity Builder Bot [UBB](https://github.com/mopsicus/ubb)
 * Update repository before build
 * Build Unity project
 * Build Xcode project
@@ -98,11 +98,11 @@ Unity Builder Helper provide tools forh build projects, control and fast switchi
 <!-- GETTING STARTED -->
 ## Getting Started
 
-Bot uses build script from Unity Builder Helper generates support files for all bot steps, but you can use your own with modifications.
+UBH is Unity editor tool without dependencies*. Just add package to your project, edit config file and use.
 
 ### Requirements
 1. Unity 2020+
-2. NiceJson (in package)
+2. NiceJson (in package)*
 3. Mac OS for building Xcode projects
 4. The steady hands
 
