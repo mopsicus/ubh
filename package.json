@@ -1,0 +1,32 @@
+{
+  "name": "com.mopsicus.ubh",
+  "version": "1.0.0",
+  "displayName": "Unity Builder Helper",
+  "description": "Run local and remote builds, validate platform options",
+  "keywords": [
+    "telegram",
+    "unity",
+    "build",
+    "xcode",
+    "android",
+    "apk",
+    "ipa",
+    "ci/cd"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mopsicus/unity-builder-helper.git"
+  },
+  "samples": [
+    {
+      "displayName": "Demo",
+      "description": "A demo project with example support files",
+      "path": "Samples~/Demo"
+    }
+  ],  
+  "author": {
+    "name": "Mopsicus",
+    "email": "mail@mopsicus.ru",
+    "url": "https://mopsicus.ru"
+  }
+}
