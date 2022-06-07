@@ -1,0 +1,10 @@
+{
+	"name": "UBH.Init",
+    "includePlatforms": [
+        "Android",
+        "Editor",
+        "iOS",
+        "WebGL"
+    ],
+    "excludePlatforms": []
+}

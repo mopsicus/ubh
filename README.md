@@ -98,7 +98,7 @@ Unity Builder Helper provide tools forh build projects, control and fast switchi
 <!-- GETTING STARTED -->
 ## Getting Started
 
-UBH is Unity editor tool without dependencies*. Just add package to your project, edit config file and use.
+UBH is Unity editor tool without dependencies*. Just add package to your project, create config file and use.
 
 ### Requirements
 1. Unity 2020+
@@ -115,7 +115,7 @@ Get it from [releases page](https://github.com/mopsicus/ubh/releases) or add the
 
 ### Setup
 
-Change settings in `UBHConfig` static class:
+Make your own `UBHConfig.cs` base on `BaseUBHConfig` class, and edit settings:
 
 `string UserID` Your Telegram user ID for communicate with Unity Builder Bot
 
