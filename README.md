@@ -83,7 +83,7 @@ Unity Builder Helper provide tools forh build projects, control and fast switchi
 * Add external files to Android build
 * Build project
 
-### Features with Unity Builder Bot [UBB](https://github.com/mopsicus/ubb)
+### Features with Unity Builder Bot ([UBB](https://github.com/mopsicus/ubb))
 * Update repository before build
 * Build Unity project
 * Build Xcode project
