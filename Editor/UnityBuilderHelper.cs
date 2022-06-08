@@ -9,6 +9,14 @@ using Debug = UnityEngine.Debug;
 
 namespace Mopsicus.UBH {
 
+    /// <summary>
+    /// Struct for fill PList
+    /// </summary>
+    public struct PListItem {
+        public string Key;
+        public string Value;
+    }
+
     public class UnityBuilderHelper : EditorWindow {
 
         /// <summary>
@@ -28,7 +36,12 @@ namespace Mopsicus.UBH {
         /// <summary>
         /// Default height
         /// </summary>
-        const int HEIGHT = 640;
+        const int HEIGHT = 600;
+
+        /// <summary>
+        /// Horizontal
+        /// </summary>
+        const int OFFSET = 150;
 
         /// <summary>
         /// Height for select buttons
@@ -111,6 +124,116 @@ namespace Mopsicus.UBH {
         private const string BOT_COMMAND_URL = "https://api.telegram.org/bot{0}/sendMessage?chat_id={1}&text=<code>/build {2} {3} {4} {5}</code>{6}";
 
         /// <summary>
+        /// Remote key fold
+        /// </summary>
+        private const string REMOTE_KEY = "ubh_remote";
+
+        /// <summary>
+        /// Android key fold
+        /// </summary>
+        private const string ANDROID_KEY = "ubh_android";
+
+        /// <summary>
+        /// iOS key fold
+        /// </summary>
+        private const string IOS_KEY = "ubh_ios";
+
+        /// <summary>
+        /// Token key
+        /// </summary>
+        public const string BOT_TOKEN_KEY = "ubh_token";
+
+        /// <summary>
+        /// Telegram user key
+        /// </summary>
+        public const string USER_ID_KEY = "ubh_user";
+
+        /// <summary>
+        /// Game title key
+        /// </summary>
+        public const string GAME_TITLE_KEY = "ubh_title";
+
+        /// <summary>
+        /// Google keystore path
+        /// </summary>
+        public const string GOOGLE_PATH_KEY = "ubh_g_path";
+
+        /// <summary>
+        /// Google keystore password
+        /// </summary>
+        public const string GOOGLE_PASSWORD_KEY = "ubh_g_pass";
+
+        /// <summary>
+        /// Google keystore alias
+        /// </summary>
+        public const string GOOGLE_ALIAS_KEY = "ubh_g_alias";
+
+        /// <summary>
+        /// Google keystore alias pass
+        /// </summary>
+        public const string GOOGLE_APASS_KEY = "ubh_g_apass";
+
+        /// <summary>
+        /// Huawei keystore path
+        /// </summary>
+        public const string HUAWEI_PATH_KEY = "ubh_h_path";
+
+        /// <summary>
+        /// Huawei keystore password
+        /// </summary>
+        public const string HUAWEI_PASSWORD_KEY = "ubh_h_pass";
+
+        /// <summary>
+        /// Huawei keystore alias
+        /// </summary>
+        public const string HUAWEI_ALIAS_KEY = "ubh_h_alias";
+
+        /// <summary>
+        /// Huawei keystore alias pass
+        /// </summary>
+        public const string HUAWEI_APASS_KEY = "ubh_h_apass";
+
+        /// <summary>
+        /// Huawei dependencies
+        /// </summary>
+        public const string HUAWEI_DEPS_KEY = "ubh_h_deps";
+
+        /// <summary>
+        /// iOS locales
+        /// </summary>
+        public const string LOCALES_KEY = "ubh_locales";
+
+        /// <summary>
+        /// iOS frameworks
+        /// </summary>
+        public const string FRAMEWORKS_KEY = "ubh_frameworks";
+
+        /// <summary>
+        /// iOS support files
+        /// </summary>
+        public const string SUPPORT_FILES_KEY = "ubh_support";
+
+        /// <summary>
+        /// iOS push enabled
+        /// </summary>
+        public const string PUSH_KEY = "ubh_push";
+
+        /// <summary>
+        /// iOS purchase enabled
+        /// </summary>
+        public const string PURCHASE_KEY = "ubh_purchase";
+
+        /// <summary>
+        /// iOS sign in with apple enabled
+        /// </summary>
+        public const string SIGN_KEY = "ubh_sign";
+
+        /// <summary>
+        /// iOS plist
+        /// </summary>
+        public const string PLIST_KEY = "ubh_plist";
+
+        /// <summary>
         /// Current platform
         /// </summary>
         private PlatformType _currentPlatform = PlatformType.IOS;
@@ -164,6 +287,126 @@ namespace Mopsicus.UBH {
         /// Flag to apply bundle build for Android
         /// </summary>
         private bool _isBundleBuild = false;
+
+        /// <summary>
+        /// Flog to show settings
+        /// </summary>
+        private bool _isSettingsMode = false;
+
+        /// <summary>
+        /// Title for builds
+        /// </summary>
+        private string _gameTitle = null;
+
+        /// <summary>
+        /// Telegram bot token
+        /// </summary>
+        private string _botToken = null;
+
+        /// <summary>
+        /// Telegram user id
+        /// </summary>
+        private string _userID = null;
+
+        /// <summary>
+        /// Locales list, separated by comma
+        /// </summary>
+        private string _locales = null;
+
+        /// <summary>
+        /// Framework names list, separated by comma
+        /// </summary>
+        private string _frameworks = null;
+
+        /// <summary>
+        /// Support files for iOS, separated by comma
+        /// </summary>
+        private string _supportFiles = null;
+
+        /// <summary>
+        /// Enable push notification in xcode
+        /// </summary>
+        private bool _isPushes = false;
+
+        /// <summary>
+        /// Enable purchases in xcode
+        /// </summary>
+        private bool _isPurchases = false;
+
+        /// <summary>
+        /// Enable sign in with Apple in xcode
+        /// </summary>
+        private bool _isSignIn = false;
+
+        /// <summary>
+        /// Path to keystore file
+        /// </summary>
+        private string _googlePath = null;
+
+        /// <summary>
+        /// Password for keystore
+        /// </summary>        
+        private string _googlePassword = null;
+
+        /// <summary>
+        /// Alias in keystore
+        /// </summary>        
+        private string _googleAlias = null;
+
+        /// <summary>
+        /// Password for alias
+        /// </summary>        
+        private string _googleAliasPassword = null;
+
+        /// <summary>
+        /// Path to keystore file
+        /// </summary>
+        private string _huaweiPath = null;
+
+        /// <summary>
+        /// Password for keystore
+        /// </summary>
+        private string _huaweiPassword = null;
+
+        /// <summary>
+        /// Alias in keystore
+        /// </summary>
+        private string _huaweiAlias = null;
+
+        /// <summary>
+        /// Password for alias
+        /// </summary>
+        private string _huaweiAliasPassword = null;
+
+        /// <summary>
+        /// Dependencies separated by comma
+        /// </summary>
+        private string _huaweiDependencies = null;
+
+        /// <summary>
+        /// Position for scroll view
+        /// </summary>
+        Vector2 _scrollPosition = Vector2.zero;
+
+        /// <summary>
+        /// Visible status for remote
+        /// </summary>
+        private bool _remoteStatus = false;
+
+        /// <summary>
+        /// Visible status for Android
+        /// </summary>
+        private bool _androidStatus = false;
+
+        /// <summary>
+        /// Visible status for iOS
+        /// </summary>
+        private bool _iosStatus = false;
+
+        /// <summary>
+        /// List of plist items
+        /// </summary>
+        private List<PListItem> _plist = new List<PListItem>();
 
         /// <summary>
         /// Init
@@ -236,6 +479,7 @@ namespace Mopsicus.UBH {
             InitColors();
             InitPlatformIcons();
             InitLoggerIcons();
+            LoadSettings();
             BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
             PlatformType platform = (PlatformType)UBHPrefs.GetInt(PLATFORM_KEY, -1);
             SwitchPlatform(platform);
@@ -318,7 +562,190 @@ namespace Mopsicus.UBH {
         /// Draw window items
         /// </summary>
         void OnGUI() {
+            if (_isSettingsMode) {
+                ShowSettings();
+            } else {
+                ShowPanel();
+            }
+        }
+
+        /// <summary>
+        /// Show settings
+        /// </summary>
+        private void ShowSettings() {
             GUILayout.BeginVertical();
+            GUILayout.Space(VERTICAL_SPACING);
+            GUI.backgroundColor = Color.gray;
+            _remoteStatus = EditorGUILayout.Foldout(_remoteStatus, "Remote settings");
+            if (_remoteStatus) {
+                _botToken = EditorGUILayout.TextField("Bot token:", _botToken);
+                _userID = EditorGUILayout.TextField("User ID:", _userID);
+                _gameTitle = EditorGUILayout.TextField("Game title:", _gameTitle);
+            }
+            GUILayout.Space(VERTICAL_SPACING);
+            _androidStatus = EditorGUILayout.Foldout(_androidStatus, "Android settings");
+            if (_androidStatus) {
+                GUILayout.Label("KeyStore for Google", EditorStyles.label);
+                GUILayout.BeginHorizontal();
+                _googlePath = EditorGUILayout.TextField("Path:", _googlePath);
+                if (GUILayout.Button("...", GUILayout.MaxWidth(BROWSE_WIDTH))) {
+                    string path = EditorUtility.OpenFilePanel("Select keystore", _googlePath, "");
+                    if (!string.IsNullOrEmpty(path)) {
+                        _googlePath = path;
+                    }
+                }
+                GUILayout.EndHorizontal();
+                _googlePassword = EditorGUILayout.TextField("Password:", _googlePassword);
+                _googleAlias = EditorGUILayout.TextField("Alias:", _googleAlias);
+                _googleAliasPassword = EditorGUILayout.TextField("Alias password:", _googleAliasPassword);
+                GUILayout.Space(VERTICAL_SPACING);
+                GUILayout.Label("KeyStore for Huawei", EditorStyles.label);
+                GUILayout.BeginHorizontal();
+                _huaweiPath = EditorGUILayout.TextField("Path:", _huaweiPath);
+                if (GUILayout.Button("...", GUILayout.MaxWidth(BROWSE_WIDTH))) {
+                    string path = EditorUtility.OpenFilePanel("Select keystore", _huaweiPath, "");
+                    if (!string.IsNullOrEmpty(path)) {
+                        _huaweiPath = path;
+                    }
+                }
+                GUILayout.EndHorizontal();
+                _huaweiPassword = EditorGUILayout.TextField("Password:", _huaweiPassword);
+                _huaweiAlias = EditorGUILayout.TextField("Alias:", _huaweiAlias);
+                _huaweiAliasPassword = EditorGUILayout.TextField("Alias password:", _huaweiAliasPassword);
+                GUILayout.Space(VERTICAL_SPACING);
+                _huaweiDependencies = EditorGUILayout.TextField("Huawei dependencies:", _huaweiDependencies);
+            }
+            GUILayout.Space(VERTICAL_SPACING);
+            _iosStatus = EditorGUILayout.Foldout(_iosStatus, "iOS settings");
+            if (_iosStatus) {
+                _locales = EditorGUILayout.TextField("Locales:", _locales);
+                _frameworks = EditorGUILayout.TextField("Frameworks:", _frameworks);
+                _supportFiles = EditorGUILayout.TextField("Support files:", _supportFiles);
+                _isPushes = EditorGUILayout.Toggle("Pushes:", _isPushes);
+                _isPurchases = EditorGUILayout.Toggle("Purchases:", _isPurchases);
+                _isSignIn = EditorGUILayout.Toggle("Sign in with Apple:", _isSignIn);
+                GUILayout.Space(VERTICAL_SPACING);
+                GUILayout.Label("Plist items", EditorStyles.label);
+                GUILayout.BeginHorizontal();
+                GUILayout.Space(OFFSET);
+                GUILayout.BeginVertical();
+                _scrollPosition = GUILayout.BeginScrollView(_scrollPosition, false, true);
+                if (_plist.Count > 0) {
+                    for (int i = 0; i < _plist.Count; i++) {
+                        PListItem item = _plist[i];
+                        GUILayout.BeginVertical();
+                        item.Key = EditorGUILayout.TextField("Key:", item.Key);
+                        item.Value = EditorGUILayout.TextField("Value:", item.Value);
+                        _plist[i] = item;
+                        if (GUILayout.Button("Remove")) {
+                            _plist.Remove(item);
+                        }
+                        GUILayout.EndVertical();
+                    }
+                }
+                if (GUILayout.Button("Add")) {
+                    PListItem item = new PListItem();
+                    _plist.Add(item);
+                }
+                GUILayout.EndScrollView();
+                GUILayout.EndVertical();
+                GUILayout.EndHorizontal();
+            }
+            GUILayout.Space(VERTICAL_SPACING);
+            if (GUILayout.Button("Save", GUILayout.Height(ACTION_HEIGHT))) {
+                SaveSettings();
+                _isSettingsMode = false;
+            }
+            GUILayout.EndVertical();
+        }
+
+        /// <summary>
+        /// Load all settings
+        /// </summary>
+        private void LoadSettings() {
+            _remoteStatus = UBHPrefs.GetBool(REMOTE_KEY, true);
+            _androidStatus = UBHPrefs.GetBool(ANDROID_KEY, false);
+            _iosStatus = UBHPrefs.GetBool(IOS_KEY, true);
+            _botToken = UBHPrefs.GetString(BOT_TOKEN_KEY);
+            _userID = UBHPrefs.GetString(USER_ID_KEY);
+            _gameTitle = UBHPrefs.GetString(GAME_TITLE_KEY);
+            _googlePath = UBHPrefs.GetString(GOOGLE_PATH_KEY);
+            _googlePassword = UBHPrefs.GetString(GOOGLE_PASSWORD_KEY);
+            _googleAlias = UBHPrefs.GetString(GOOGLE_ALIAS_KEY);
+            _googleAliasPassword = UBHPrefs.GetString(GOOGLE_APASS_KEY);
+            _huaweiPath = UBHPrefs.GetString(HUAWEI_PATH_KEY);
+            _huaweiPassword = UBHPrefs.GetString(HUAWEI_PASSWORD_KEY);
+            _huaweiAlias = UBHPrefs.GetString(HUAWEI_ALIAS_KEY);
+            _huaweiAliasPassword = UBHPrefs.GetString(HUAWEI_APASS_KEY);
+            _huaweiDependencies = UBHPrefs.GetString(HUAWEI_DEPS_KEY, "com.huawei.hms:base:6.3.0.303, com.huawei.hms:hwid:6.4.0.300, com.huawei.agconnect:agconnect-auth:1.6.4.300, com.huawei.agconnect:agconnect-auth-huawei:1.6.4.300, com.huawei.hms:iap:6.3.0.300, com.huawei.hms:push:6.3.0.302, com.huawei.hms:ads:3.4.52.302, com.huawei.hms:ads-identifier:3.4.39.302, com.huawei.hms:game:5.0.4.303");
+            _locales = UBHPrefs.GetString(LOCALES_KEY, "en, ru");
+            _frameworks = UBHPrefs.GetString(FRAMEWORKS_KEY, "AppTrackingTransparency, UserNotifications, AuthenticationServices, StoreKit, MessageUI, Webkit");
+            _supportFiles = UBHPrefs.GetString(SUPPORT_FILES_KEY, "splash-iphone.png, splash-ipad.png");
+            _isPushes = UBHPrefs.GetBool(PUSH_KEY, true);
+            _isPurchases = UBHPrefs.GetBool(PURCHASE_KEY, true);
+            _isSignIn = UBHPrefs.GetBool(SIGN_KEY, true);
+            string data = UBHPrefs.GetString(PLIST_KEY);
+            if (!string.IsNullOrEmpty(data)) {
+                _plist.Clear();
+                JsonArray list = (JsonArray)JsonNode.ParseJsonString(data);
+                foreach (JsonObject json in list) {
+                    PListItem item = new PListItem();
+                    item.Key = json["key"];
+                    item.Value = json["value"];
+                    _plist.Add(item);
+                }
+            } else {
+                PListItem item = new PListItem();
+                item.Key = "NSUserTrackingUsageDescription";
+                item.Value = "$(PRODUCT_NAME) need to access the IDFA in order to deliver personalized advertising and to help us improve the game.";
+                _plist.Add(item);
+            }
+        }
+
+        /// <summary>
+        /// Save all settings
+        /// </summary>
+        private void SaveSettings() {
+            UBHPrefs.SetBool(REMOTE_KEY, _remoteStatus);
+            UBHPrefs.SetBool(ANDROID_KEY, _androidStatus);
+            UBHPrefs.SetBool(IOS_KEY, _iosStatus);
+            UBHPrefs.SetString(BOT_TOKEN_KEY, _botToken.Trim());
+            UBHPrefs.SetString(USER_ID_KEY, _userID.Trim());
+            UBHPrefs.SetString(GAME_TITLE_KEY, _gameTitle.Trim());
+            UBHPrefs.SetString(GOOGLE_PATH_KEY, _googlePath);
+            UBHPrefs.SetString(GOOGLE_PASSWORD_KEY, _googlePassword);
+            UBHPrefs.SetString(GOOGLE_ALIAS_KEY, _googleAlias);
+            UBHPrefs.SetString(GOOGLE_APASS_KEY, _googleAliasPassword);
+            UBHPrefs.SetString(HUAWEI_PATH_KEY, _huaweiPath);
+            UBHPrefs.SetString(HUAWEI_PASSWORD_KEY, _huaweiPassword);
+            UBHPrefs.SetString(HUAWEI_ALIAS_KEY, _huaweiAlias);
+            UBHPrefs.SetString(HUAWEI_APASS_KEY, _huaweiAliasPassword);
+            UBHPrefs.SetString(HUAWEI_DEPS_KEY, _huaweiDependencies.Trim());
+            UBHPrefs.SetString(LOCALES_KEY, _locales.Trim());
+            UBHPrefs.SetString(FRAMEWORKS_KEY, _frameworks.Trim());
+            UBHPrefs.SetString(SUPPORT_FILES_KEY, _supportFiles.Trim());
+            UBHPrefs.SetBool(PUSH_KEY, _isPushes);
+            UBHPrefs.SetBool(PURCHASE_KEY, _isPurchases);
+            UBHPrefs.SetBool(SIGN_KEY, _isSignIn);
+            JsonArray plist = new JsonArray();
+            for (int i = 0; i < _plist.Count; i++) {
+                JsonObject item = new JsonObject();
+                item["key"] = _plist[i].Key;
+                item["value"] = _plist[i].Value;
+                plist.Add(item);
+            }
+            UBHPrefs.SetString(PLIST_KEY, plist.ToJsonString());
+        }
+
+        /// <summary>
+        /// Show UBB panel
+        /// </summary>
+        private void ShowPanel() {
+            GUILayout.BeginVertical();
+            GUILayout.Space(VERTICAL_SPACING);
+            if (GUILayout.Button("Settings", GUILayout.Height(ACTION_HEIGHT))) {
+                _isSettingsMode = true;
+            }
             GUILayout.Space(VERTICAL_SPACING);
             GUILayout.Label("Platform:", EditorStyles.boldLabel);
             GUILayout.BeginHorizontal();
@@ -405,17 +832,17 @@ namespace Mopsicus.UBH {
             GUILayout.FlexibleSpace();
             GUI.backgroundColor = Color.magenta;
             if (GUILayout.Button("Remote build", GUILayout.Height(ACTION_HEIGHT))) {
-                if (string.IsNullOrEmpty(UBHConfig.BotToken)) {
-                    if (EditorUtility.DisplayDialog(titleContent.text, "Bot token is empty!", "Close")) {
+                if (string.IsNullOrEmpty(_botToken)) {
+                    if (EditorUtility.DisplayDialog("Error", "Bot token is empty!", "Close")) {
                         return;
                     }
                 }
-                if (string.IsNullOrEmpty(UBHConfig.UserID)) {
+                if (string.IsNullOrEmpty(_userID)) {
                     if (EditorUtility.DisplayDialog("Error", "User ID is empty!", "Close")) {
                         return;
                     }
                 }
-                if (string.IsNullOrEmpty(UBHConfig.GameTitle)) {
+                if (string.IsNullOrEmpty(_gameTitle)) {
                     if (EditorUtility.DisplayDialog("Error", "Game title is empty!", "Close")) {
                         return;
                     }
@@ -435,7 +862,7 @@ namespace Mopsicus.UBH {
                 }
                 string project = new DirectoryInfo(path).Name;
                 string defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
-                string url = string.Format(BOT_COMMAND_URL, UBHConfig.BotToken, UBHConfig.UserID, project, branch, _currentPlatform.ToString().ToLowerInvariant(), defines, BOT_PAYLOAD).Replace("\n", "").Replace("\r", "");
+                string url = string.Format(BOT_COMMAND_URL, _botToken, _userID, project, branch, _currentPlatform.ToString().ToLowerInvariant(), defines, BOT_PAYLOAD).Replace("\n", "").Replace("\r", "");
                 UnityWebRequest request = UnityWebRequest.Get(url);
                 request.SendWebRequest();
             }
@@ -468,17 +895,17 @@ namespace Mopsicus.UBH {
 #if CLIENT_DEBUG
             EditorUserBuildSettings.development = true;
             postfix = "-dev";
-#endif
+#endif      
             switch (_currentPlatform) {
                 case PlatformType.GOOGLE:
-                    path = string.Format(ANDROID_BUILD_FILE_MASK, _platformBuilds[(int)_currentPlatform], UBHConfig.GameTitle, _buildVersion, _buildCode, "", postfix, ext);
+                    path = string.Format(ANDROID_BUILD_FILE_MASK, _platformBuilds[(int)_currentPlatform], _gameTitle, _buildVersion, _buildCode, "", postfix, ext);
                     break;
                 case PlatformType.HUAWEI:
-                    path = string.Format(ANDROID_BUILD_FILE_MASK, _platformBuilds[(int)_currentPlatform], UBHConfig.GameTitle, _buildVersion, _buildCode, "-huawei", postfix, ext);
+                    path = string.Format(ANDROID_BUILD_FILE_MASK, _platformBuilds[(int)_currentPlatform], _gameTitle, _buildVersion, _buildCode, "-huawei", postfix, ext);
                     break;
                 case PlatformType.IOS:
                 case PlatformType.WEB:
-                    path = string.Format(IOS_BUILD_MASK, _platformBuilds[(int)_currentPlatform], UBHConfig.GameTitle, _buildVersion, _buildCode, postfix);
+                    path = string.Format(IOS_BUILD_MASK, _platformBuilds[(int)_currentPlatform], _gameTitle, _buildVersion, _buildCode, postfix);
                     if (!Directory.Exists(path)) {
                         Directory.CreateDirectory(path);
                     }

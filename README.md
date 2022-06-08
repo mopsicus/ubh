@@ -63,7 +63,7 @@ Unity editor tool to manage and build projects
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Unity Builder Helper provide tools forh build projects, control and fast switching build targets and defines. UBH use <a href="https://github.com/mopsicus/ubb">Unity Builder Bot</a> (UBB) for remote builds.
+Unity Builder Helper provide tools for build projects, control and fast switching build targets and defines. UBH use <a href="https://github.com/mopsicus/ubb">Unity Builder Bot</a> (UBB) for remote builds.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -83,7 +83,7 @@ Unity Builder Helper provide tools forh build projects, control and fast switchi
 * Add external files to Android build
 * Build project
 
-### Features with Unity Builder Bot ([UBB](https://github.com/mopsicus/ubb))
+### Features with Unity Builder Bot
 * Update repository before build
 * Build Unity project
 * Build Xcode project
@@ -115,31 +115,9 @@ Get it from [releases page](https://github.com/mopsicus/ubh/releases) or add the
 
 ### Setup
 
-Make your own `UBHConfig.cs` base on `BaseUBHConfig` class, and edit settings:
-
-`string UserID` Your Telegram user ID for communicate with Unity Builder Bot
-
-`string BotToken` Bot token
-
-`string GameTitle` Game title for builds name
-
-`string[] Locales` Locales list for iOS builds
-
-`JsonObject KeyStoreGoogle` JSON object with Google keystore data: path, password, alias, alias password
-
-`JsonObject KeyStoreHuawei` JSON object with Huawei keystore data: path, password, alias, alias password
-
-`string[] Frameworks` Frameworks list for iOS builds
-
-`string[] SupportFilesForiOS` List of files names for iOS builds
-
-`Dictionary<string, string> PListForiOS` Dictionary for patch Xcode plist
-
-`bool IsPushEnabled` Is push notifications enabled for iOS
-
-`bool IsPurchaseEnabled` Is purchases enabled for iOS
-
-`bool IsSignInEnabled` Is authorization with Apple enabled for iOS
+1. Open UBH in Unity Editor via hotkey `cmd+g` or menu `Tools -> Unity Builder Helper`
+2. Tap "Settings" button
+3. Fill settings and save
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -153,8 +131,7 @@ Make your own `UBHConfig.cs` base on `BaseUBHConfig` class, and edit settings:
 
 ### Support files
 
-You should store your support files in project root folder "Support files". 
-Structure:
+You should store your support files in project root folder "Support files";
 
 ```
 -Project
@@ -173,6 +150,8 @@ Structure:
 ----splash.storyboard
 ----....
 ```
+
+All files in this folder will be added to project.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

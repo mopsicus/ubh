@@ -1,5 +1,7 @@
+using System.IO;
 using NiceJson;
 using UnityEditor;
+using UnityEngine;
 using Debug = UnityEngine.Debug;
 
 namespace Mopsicus.UBH {
@@ -102,21 +104,26 @@ namespace Mopsicus.UBH {
                 return true;
             }
 #if GOOGLE
-            JsonObject keystore = UBHConfig.KeyStoreGoogle;
-#elif HUAWEI
-            JsonObject keystore = UBHConfig.KeyStoreHuawei;
-#elif UNITY_IOS
-            JsonObject keystore = new JsonObject();
-#endif
-            if (string.IsNullOrEmpty(keystore["pass"])) {
+            if (string.IsNullOrEmpty(UBHPrefs.GetString(UnityBuilderHelper.GOOGLE_PASSWORD_KEY))) {
                 Debug.LogError("KeyStore object in Config not completed");
                 return false;
             }
-            PlayerSettings.Android.keystoreName = keystore["path"];
-            PlayerSettings.Android.keystorePass = keystore["pass"];
-            PlayerSettings.Android.keyaliasName = keystore["alias"];
-            PlayerSettings.Android.keyaliasPass = keystore["apass"];
-            Debug.LogFormat("Keystore file loaded from: {0}", keystore["path"]);
+            PlayerSettings.Android.keystoreName = UBHPrefs.GetString(UnityBuilderHelper.GOOGLE_PATH_KEY);
+            PlayerSettings.Android.keystorePass = UBHPrefs.GetString(UnityBuilderHelper.GOOGLE_PASSWORD_KEY);
+            PlayerSettings.Android.keyaliasName = UBHPrefs.GetString(UnityBuilderHelper.GOOGLE_ALIAS_KEY);
+            PlayerSettings.Android.keyaliasPass = UBHPrefs.GetString(UnityBuilderHelper.GOOGLE_APASS_KEY);
+            Debug.LogFormat("Keystore file loaded from: {0}", UBHPrefs.GetString(UnityBuilderHelper.GOOGLE_PATH_KEY));
+#elif HUAWEI
+            if (string.IsNullOrEmpty(UBHPrefs.GetString(UnityBuilderHelper.HUAWEI_PASSWORD_KEY))) {
+                Debug.LogError("KeyStore object in Config not completed");
+                return false;
+            }
+            PlayerSettings.Android.keystoreName = UBHPrefs.GetString(UnityBuilderHelper.HUAWEI_PATH_KEY);
+            PlayerSettings.Android.keystorePass = UBHPrefs.GetString(UnityBuilderHelper.HUAWEI_PASSWORD_KEY);
+            PlayerSettings.Android.keyaliasName = UBHPrefs.GetString(UnityBuilderHelper.HUAWEI_ALIAS_KEY);
+            PlayerSettings.Android.keyaliasPass = UBHPrefs.GetString(UnityBuilderHelper.HUAWEI_APASS_KEY);
+            Debug.LogFormat("Keystore file loaded from: {0}", UBHPrefs.GetString(UnityBuilderHelper.HUAWEI_PATH_KEY));
+#endif            
             return true;
         }
 

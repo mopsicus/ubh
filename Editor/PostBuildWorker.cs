@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
 using System.Collections.Generic;
+using NiceJson;
 #if UNITY_IOS
 using UnityEditor.iOS.Xcode;
 #endif
@@ -66,8 +67,13 @@ namespace Mopsicus.UBH {
             PlistDocument plist = new PlistDocument();
             plist.ReadFromFile(plistPath);
             PlistElementDict rootDict = plist.root;
-            foreach (KeyValuePair<string, string> item in UBHConfig.PListForiOS) {
-                rootDict.SetString(item.Key, item.Value);
+            string data = UBHPrefs.GetString(UnityBuilderHelper.PLIST_KEY);
+            if (string.IsNullOrEmpty(data)) {
+                return;
+            }
+            JsonArray list = (JsonArray)JsonNode.ParseJsonString(data);
+            foreach (JsonObject item in list) {
+                rootDict.SetString(item["key"], item["value"]);
             }
             plist.WriteToFile(plistPath);
             Debug.Log("Plist fixed");
@@ -83,8 +89,13 @@ namespace Mopsicus.UBH {
             string file = File.ReadAllText(projectPath);
             project.ReadFromString(file);
             string target = project.GetUnityMainTargetGuid();
-            foreach (string item in UBHConfig.SupportFilesForiOS) {
-                AddFileToRoot(project, path, target, item);
+            string data = UBHPrefs.GetString(UnityBuilderHelper.SUPPORT_FILES_KEY);
+            if (string.IsNullOrEmpty(data)) {
+                return;
+            }
+            string[] list = data.Split(',');
+            foreach (string item in list) {
+                AddFileToRoot(project, path, target, item.Trim());
             }
         }
 
@@ -128,11 +139,14 @@ namespace Mopsicus.UBH {
             string plistPath = Path.Combine(path, "Info.plist");
             plist.ReadFromFile(plistPath);
             PlistElementArray languages = plist.root.CreateArray("CFBundleLocalizations");
-            string[] list = UBHConfig.Locales;
-            foreach (string code in list) {
-                project.AddKnownRegion(code);
-                languages.AddString(code);
-                Debug.LogFormat("Language \"{0}\" added to project", code);
+            string data = UBHPrefs.GetString(UnityBuilderHelper.LOCALES_KEY);
+            if (!string.IsNullOrEmpty(data)) {
+                string[] list = data.Split(',');
+                foreach (string code in list) {
+                    project.AddKnownRegion(code.Trim());
+                    languages.AddString(code.Trim());
+                    Debug.LogFormat("Language \"{0}\" added to project", code.Trim());
+                }
             }
             plist.WriteToFile(plistPath);
             project.WriteToFile(projectPath);
@@ -147,18 +161,21 @@ namespace Mopsicus.UBH {
             string projectPath = PBXProject.GetPBXProjectPath(path);
             PBXProject project = new PBXProject();
             project.ReadFromFile(projectPath);
-            string[] list = UBHConfig.Locales;
-            foreach (string code in list) {
-                string langDir = string.Format("{0}.lproj", code);
-                string directory = Path.Combine(path, langDir);
-                Directory.CreateDirectory(directory);
-                string filePath = Path.Combine(directory, infoFile);
-                string relativePath = Path.Combine(langDir, infoFile);
-                string sourcePath = Path.Combine(SUPPORT_FILES_FOLDER, LOCALES_FOLDER, langDir, infoFile);
-                string data = File.ReadAllText(sourcePath);
-                File.WriteAllText(filePath, data);
-                project.AddLocaleVariantFile(infoFile, code, relativePath);
-                Debug.LogFormat("Localization \"{0}\" added to project", langDir);
+            string data = UBHPrefs.GetString(UnityBuilderHelper.LOCALES_KEY);
+            if (!string.IsNullOrEmpty(data)) {
+                string[] list = data.Split(',');
+                foreach (string code in list) {
+                    string langDir = string.Format("{0}.lproj", code.Trim());
+                    string directory = Path.Combine(path, langDir);
+                    Directory.CreateDirectory(directory);
+                    string filePath = Path.Combine(directory, infoFile);
+                    string relativePath = Path.Combine(langDir, infoFile);
+                    string sourcePath = Path.Combine(SUPPORT_FILES_FOLDER, LOCALES_FOLDER, langDir, infoFile);
+                    string source = File.ReadAllText(sourcePath);
+                    File.WriteAllText(filePath, source);
+                    project.AddLocaleVariantFile(infoFile, code.Trim(), relativePath);
+                    Debug.LogFormat("Localization \"{0}\" added to project", langDir);
+                }
             }
             project.WriteToFile(projectPath);
         }
@@ -173,16 +190,16 @@ namespace Mopsicus.UBH {
             string file = File.ReadAllText(projectPath);
             project.ReadFromString(file);
             string target = project.GetUnityMainTargetGuid();
-            string managerFile = string.Format("Unity-iPhone/{0}.entitlements", UBHConfig.GameTitle);
+            string managerFile = string.Format("Unity-iPhone/{0}.entitlements", UBHPrefs.GetString(UnityBuilderHelper.GAME_TITLE_KEY));
             ProjectCapabilityManager manager = new ProjectCapabilityManager(projectPath, managerFile, "Unity-iPhone", target);
-            if (UBHConfig.IsPurchaseEnabled) {
+            if (UBHPrefs.GetBool(UnityBuilderHelper.PURCHASE_KEY)) {
                 project.AddFrameworkToProject(target, "StoreKit.framework", false);
                 manager.AddInAppPurchase();
             }
-            if (UBHConfig.IsSignInEnabled) {
+            if (UBHPrefs.GetBool(UnityBuilderHelper.SIGN_KEY)) {
                 manager.AddSignInWithApple();
             }
-            if (UBHConfig.IsPushEnabled) {
+            if (UBHPrefs.GetBool(UnityBuilderHelper.PUSH_KEY)) {
                 manager.AddBackgroundModes(BackgroundModesOptions.RemoteNotifications);
 #if CLIENT_DEBUG
                 manager.AddPushNotifications(true);
@@ -194,8 +211,12 @@ namespace Mopsicus.UBH {
             project.AddFile(managerFile, managerFile);
             project.AddBuildProperty(target, "CODE_SIGN_ENTITLEMENTS", managerFile);
             string targetFramework = project.GetUnityFrameworkTargetGuid();
-            foreach (string framework in UBHConfig.Frameworks) {
-                project.AddFrameworkToProject(targetFramework, string.Format("{0}.framework", framework), false);
+            string data = UBHPrefs.GetString(UnityBuilderHelper.FRAMEWORKS_KEY);
+            if (!string.IsNullOrEmpty(data)) {
+                string[] list = data.Split(',');
+                foreach (string framework in list) {
+                    project.AddFrameworkToProject(targetFramework, string.Format("{0}.framework", framework.Trim()), false);
+                }
             }
 #if CLIENT_DEBUG
             project.SetBuildProperty(target, "ENABLE_BITCODE", "NO");

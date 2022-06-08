@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Xml;
+using NiceJson;
 using UnityEditor.Android;
 using UnityEngine;
 

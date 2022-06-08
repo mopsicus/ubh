@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using UnityEditor;
 using UnityEditor.Build;
@@ -102,8 +103,12 @@ namespace Mopsicus.UBH {
             if (!Directory.Exists(_supportsPath)) {
                 Directory.CreateDirectory(_supportsPath);
             }
-            string[] list = new string[9] { "com.huawei.hms:base:6.3.0.303", "com.huawei.hms:hwid:6.4.0.300", "com.huawei.agconnect:agconnect-auth:1.6.4.300", "com.huawei.agconnect:agconnect-auth-huawei:1.6.4.300", "com.huawei.hms:iap:6.3.0.300", "com.huawei.hms:push:6.3.0.302", "com.huawei.hms:ads:3.4.52.302", "com.huawei.hms:ads-identifier:3.4.39.302", "com.huawei.hms:game:5.0.4.303" };
-            CreateGradleFiles(list);
+            string data = UBHPrefs.GetString(UnityBuilderHelper.HUAWEI_DEPS_KEY);
+            if (!string.IsNullOrEmpty(data)) {
+                string[] list = data.Split(',');
+                CreateGradleFiles(list);
+            }
+            // string[] list = new string[9] { "com.huawei.hms:base:6.3.0.303", "com.huawei.hms:hwid:6.4.0.300", "com.huawei.agconnect:agconnect-auth:1.6.4.300", "com.huawei.agconnect:agconnect-auth-huawei:1.6.4.300", "com.huawei.hms:iap:6.3.0.300", "com.huawei.hms:push:6.3.0.302", "com.huawei.hms:ads:3.4.52.302", "com.huawei.hms:ads-identifier:3.4.39.302", "com.huawei.hms:game:5.0.4.303" };
 #endif
         }
 
