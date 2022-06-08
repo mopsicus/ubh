@@ -118,6 +118,7 @@ Get it from [releases page](https://github.com/mopsicus/ubh/releases) or add the
 1. Open UBH in Unity Editor via hotkey `cmd+g` or menu `Tools -> Unity Builder Helper`
 2. Tap "Settings" button
 3. Fill settings and save
+4. UBH get some vars from git repo, so your project should be git inited
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

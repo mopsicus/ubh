@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using NiceJson;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
@@ -1082,6 +1083,95 @@ namespace Mopsicus.UBH {
             for (int i = 0; i < _loggersColors.Length; i++) {
                 _loggersColors[i] = OFF_BUTTON;
             }
+        }
+
+        /// <summary>
+        /// Assmble project by command line
+        /// </summary>
+        static void Assemble() {
+            string[] args = System.Environment.GetCommandLineArgs();
+            Dictionary<string, string> param = new Dictionary<string, string>();
+            for (int i = 1; i < args.Length - 1; i++) {
+                string key = (args[i][0].Equals('-')) ? args[i].Substring(1) : "";
+                if (!string.IsNullOrEmpty(key) && !args[i + 1][0].Equals('-')) {
+                    param.Add(key, args[i + 1]);
+                }
+            }
+            JsonObject info = new JsonObject();
+            PlatformType platform = PlatformType.UNKNOWN;
+            switch (param["platform"]) {
+                case "ios":
+                    platform = PlatformType.IOS;
+                    break;
+                case "google":
+                    platform = PlatformType.GOOGLE;
+                    break;
+                case "huawei":
+                    platform = PlatformType.HUAWEI;
+                    break;
+                case "webgl":
+                    platform = PlatformType.WEB;
+                    break;
+                default:
+                    break;
+            }
+            string list = UBHPrefs.GetString(LOGGER_KEY);
+            string defines = param["defines"];
+            string path = param["output"];
+            string postfix = "";
+            BuildTargetGroup group = BuildTargetGroup.Unknown;
+            BuildTarget target = BuildTarget.iOS;
+            switch (platform) {
+                case PlatformType.IOS:
+                    group = BuildTargetGroup.iOS;
+                    target = BuildTarget.iOS;
+                    info["code"] = PlayerSettings.iOS.buildNumber;
+                    path = string.Format(IOS_BUILD_MASK, path, UBHPrefs.GetString(GAME_TITLE_KEY), PlayerSettings.bundleVersion, PlayerSettings.iOS.buildNumber, "-dev");
+                    if (!Directory.Exists(path)) {
+                        Directory.CreateDirectory(path);
+                    }
+                    break;
+                case PlatformType.GOOGLE:
+                    group = BuildTargetGroup.Android;
+                    target = BuildTarget.Android;
+                    info["code"] = PlayerSettings.Android.bundleVersionCode;
+                    path = string.Format(ANDROID_BUILD_FILE_MASK, path, UBHPrefs.GetString(GAME_TITLE_KEY), PlayerSettings.bundleVersion, PlayerSettings.Android.bundleVersionCode, "", "-dev", "apk");
+                    break;
+                case PlatformType.HUAWEI:
+                    group = BuildTargetGroup.Android;
+                    target = BuildTarget.Android;
+                    postfix = "-huawei";
+                    info["code"] = PlayerSettings.Android.bundleVersionCode;
+                    path = string.Format(ANDROID_BUILD_FILE_MASK, path, UBHPrefs.GetString(GAME_TITLE_KEY), PlayerSettings.bundleVersion, PlayerSettings.Android.bundleVersionCode, "-huawei", "-dev", "apk");
+                    break;
+                default:
+                    break;
+            }
+            info["name"] = UBHPrefs.GetString(GAME_TITLE_KEY);
+            info["bundle"] = PlayerSettings.applicationIdentifier;
+            info["company"] = PlayerSettings.companyName;
+            info["version"] = PlayerSettings.bundleVersion;
+            info["source"] = string.Format("{0}.{1}.{2}{3}-dev", UBHPrefs.GetString(GAME_TITLE_KEY), info["version"], info["code"], postfix);
+            byte[] data = Encoding.UTF8.GetBytes(info.ToJsonString());
+            File.WriteAllText(Path.Combine(param["output"], string.Format("{0}.{1}.build.json", param["project"], param["platform"])), info.ToJsonString());
+            PlayerSettings.SetScriptingBackend(group, ScriptingImplementation.IL2CPP);
+            PlayerSettings.SetScriptingDefineSymbolsForGroup(group, defines);
+            EditorUserBuildSettings.SwitchActiveBuildTarget(group, target);
+            EditorUserBuildSettings.development = true;
+            if (platform == PlatformType.GOOGLE) {
+                PlayerSettings.Android.keystoreName = UBHPrefs.GetString(GOOGLE_PATH_KEY);
+                PlayerSettings.Android.keystorePass = UBHPrefs.GetString(GOOGLE_PASSWORD_KEY);
+                PlayerSettings.Android.keyaliasName = UBHPrefs.GetString(GOOGLE_ALIAS_KEY);
+                PlayerSettings.Android.keyaliasPass = UBHPrefs.GetString(GOOGLE_APASS_KEY);
+            } else if (platform == PlatformType.HUAWEI) {
+                PlayerSettings.Android.keystoreName = UBHPrefs.GetString(HUAWEI_PATH_KEY);
+                PlayerSettings.Android.keystorePass = UBHPrefs.GetString(HUAWEI_PASSWORD_KEY);
+                PlayerSettings.Android.keyaliasName = UBHPrefs.GetString(HUAWEI_ALIAS_KEY);
+                PlayerSettings.Android.keyaliasPass = UBHPrefs.GetString(HUAWEI_APASS_KEY);
+            }
+            BuildReport report = BuildPipeline.BuildPlayer(GetScenes(), path, target, BuildOptions.None);
+            int code = (report.summary.result == BuildResult.Succeeded) ? 0 : 1;
+            EditorApplication.Exit(code);
         }
 
     }
