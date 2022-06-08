@@ -33,6 +33,7 @@ Unity editor tool to manage and build projects
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
+        <li><a href="#screenshots">Screenshots</a></li>
         <li><a href="#features">Features</a></li>
         <li><a href="#features-with-unity-builder-bot">Features with Unity Builder Bot</a></li>
       </ul>
@@ -65,7 +66,9 @@ Unity editor tool to manage and build projects
 
 Unity Builder Helper provide tools for build projects, control and fast switching build targets and defines. UBH use <a href="https://github.com/mopsicus/ubb">Unity Builder Bot</a> (UBB) for remote builds.
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+### Screenshots
+![UBH](/Images/window-1.png "UBH")
+![Settings](/Images/window-2.png "Settings")
 
 ### Features
 
