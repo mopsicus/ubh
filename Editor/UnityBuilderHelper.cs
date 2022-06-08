@@ -235,6 +235,26 @@ namespace Mopsicus.UBH {
         public const string PLIST_KEY = "ubh_plist";
 
         /// <summary>
+        /// Use google services
+        /// </summary>
+        public const string GOOGLE_SERVICES_KEY = "ubh_g_services";
+
+        /// <summary>
+        /// Use huawei services
+        /// </summary>
+        public const string HUAWEI_SERVICES_KEY = "ubh_h_services";
+
+        /// <summary>
+        /// Use keystore
+        /// </summary>
+        public const string GOOGLE_KEYSTORE_KEY = "ubh_g_keystore";
+
+        /// <summary>
+        /// Use keystore
+        /// </summary>        
+        public const string HUAWEI_KEYSTORE_KEY = "ubh_h_keystore";
+
+        /// <summary>
         /// Current platform
         /// </summary>
         private PlatformType _currentPlatform = PlatformType.IOS;
@@ -338,6 +358,26 @@ namespace Mopsicus.UBH {
         /// Enable sign in with Apple in xcode
         /// </summary>
         private bool _isSignIn = false;
+
+        /// <summary>
+        /// Enable google services
+        /// </summary>
+        private bool _isGoogleServices = false;
+
+        /// <summary>
+        /// Enable huawei services
+        /// </summary>
+        private bool _isHuaweiServices = false;
+
+        /// <summary>
+        /// Use keystore
+        /// </summary>
+        private bool _isGoogleKeystore = false;
+
+        /// <summary>
+        /// Use keystore
+        /// </summary>
+        private bool _isHuaweiKeystore = false;
 
         /// <summary>
         /// Path to keystore file
@@ -586,33 +626,40 @@ namespace Mopsicus.UBH {
             GUILayout.Space(VERTICAL_SPACING);
             _androidStatus = EditorGUILayout.Foldout(_androidStatus, "Android settings");
             if (_androidStatus) {
-                GUILayout.Label("KeyStore for Google", EditorStyles.label);
-                GUILayout.BeginHorizontal();
-                _googlePath = EditorGUILayout.TextField("Path:", _googlePath);
-                if (GUILayout.Button("...", GUILayout.MaxWidth(BROWSE_WIDTH))) {
-                    string path = EditorUtility.OpenFilePanel("Select keystore", _googlePath, "");
-                    if (!string.IsNullOrEmpty(path)) {
-                        _googlePath = path;
+                _isGoogleServices = EditorGUILayout.Toggle("Use google-services.json:", _isGoogleServices);
+                _isGoogleKeystore = EditorGUILayout.Toggle("Use KeyStore for Google", _isGoogleKeystore);
+                if (_isGoogleKeystore) {
+                    GUILayout.Space(VERTICAL_SPACING);
+                    GUILayout.BeginHorizontal();
+                    _googlePath = EditorGUILayout.TextField("Path:", _googlePath);
+                    if (GUILayout.Button("...", GUILayout.MaxWidth(BROWSE_WIDTH))) {
+                        string path = EditorUtility.OpenFilePanel("Select keystore", _googlePath, "");
+                        if (!string.IsNullOrEmpty(path)) {
+                            _googlePath = path;
+                        }
                     }
+                    GUILayout.EndHorizontal();
+                    _googlePassword = EditorGUILayout.TextField("Password:", _googlePassword);
+                    _googleAlias = EditorGUILayout.TextField("Alias:", _googleAlias);
+                    _googleAliasPassword = EditorGUILayout.TextField("Alias password:", _googleAliasPassword);
                 }
-                GUILayout.EndHorizontal();
-                _googlePassword = EditorGUILayout.TextField("Password:", _googlePassword);
-                _googleAlias = EditorGUILayout.TextField("Alias:", _googleAlias);
-                _googleAliasPassword = EditorGUILayout.TextField("Alias password:", _googleAliasPassword);
                 GUILayout.Space(VERTICAL_SPACING);
-                GUILayout.Label("KeyStore for Huawei", EditorStyles.label);
-                GUILayout.BeginHorizontal();
-                _huaweiPath = EditorGUILayout.TextField("Path:", _huaweiPath);
-                if (GUILayout.Button("...", GUILayout.MaxWidth(BROWSE_WIDTH))) {
-                    string path = EditorUtility.OpenFilePanel("Select keystore", _huaweiPath, "");
-                    if (!string.IsNullOrEmpty(path)) {
-                        _huaweiPath = path;
+                _isHuaweiServices = EditorGUILayout.Toggle("Use agconnect-services.json:", _isHuaweiServices);
+                _isHuaweiKeystore = EditorGUILayout.Toggle("Use KeyStore for Huawei", _isHuaweiKeystore);
+                if (_isHuaweiKeystore) {
+                    GUILayout.BeginHorizontal();
+                    _huaweiPath = EditorGUILayout.TextField("Path:", _huaweiPath);
+                    if (GUILayout.Button("...", GUILayout.MaxWidth(BROWSE_WIDTH))) {
+                        string path = EditorUtility.OpenFilePanel("Select keystore", _huaweiPath, "");
+                        if (!string.IsNullOrEmpty(path)) {
+                            _huaweiPath = path;
+                        }
                     }
+                    GUILayout.EndHorizontal();
+                    _huaweiPassword = EditorGUILayout.TextField("Password:", _huaweiPassword);
+                    _huaweiAlias = EditorGUILayout.TextField("Alias:", _huaweiAlias);
+                    _huaweiAliasPassword = EditorGUILayout.TextField("Alias password:", _huaweiAliasPassword);
                 }
-                GUILayout.EndHorizontal();
-                _huaweiPassword = EditorGUILayout.TextField("Password:", _huaweiPassword);
-                _huaweiAlias = EditorGUILayout.TextField("Alias:", _huaweiAlias);
-                _huaweiAliasPassword = EditorGUILayout.TextField("Alias password:", _huaweiAliasPassword);
                 GUILayout.Space(VERTICAL_SPACING);
                 _huaweiDependencies = EditorGUILayout.TextField("Huawei dependencies:", _huaweiDependencies);
             }
@@ -667,6 +714,11 @@ namespace Mopsicus.UBH {
             _remoteStatus = UBHPrefs.GetBool(REMOTE_KEY, true);
             _androidStatus = UBHPrefs.GetBool(ANDROID_KEY, false);
             _iosStatus = UBHPrefs.GetBool(IOS_KEY, true);
+            _isGoogleServices = UBHPrefs.GetBool(GOOGLE_SERVICES_KEY, false);
+            _isHuaweiServices = UBHPrefs.GetBool(HUAWEI_SERVICES_KEY, false);
+            _isGoogleKeystore = UBHPrefs.GetBool(GOOGLE_KEYSTORE_KEY, false);
+            _isHuaweiKeystore = UBHPrefs.GetBool(HUAWEI_KEYSTORE_KEY, false);
+            _iosStatus = UBHPrefs.GetBool(IOS_KEY, true);
             _botToken = UBHPrefs.GetString(BOT_TOKEN_KEY);
             _userID = UBHPrefs.GetString(USER_ID_KEY);
             _gameTitle = UBHPrefs.GetString(GAME_TITLE_KEY);
@@ -710,6 +762,10 @@ namespace Mopsicus.UBH {
             UBHPrefs.SetBool(REMOTE_KEY, _remoteStatus);
             UBHPrefs.SetBool(ANDROID_KEY, _androidStatus);
             UBHPrefs.SetBool(IOS_KEY, _iosStatus);
+            UBHPrefs.SetBool(GOOGLE_SERVICES_KEY, _isGoogleServices);
+            UBHPrefs.SetBool(HUAWEI_SERVICES_KEY, _isHuaweiServices);
+            UBHPrefs.SetBool(GOOGLE_KEYSTORE_KEY, _isGoogleKeystore);
+            UBHPrefs.SetBool(HUAWEI_KEYSTORE_KEY, _isHuaweiKeystore);
             UBHPrefs.SetString(BOT_TOKEN_KEY, !string.IsNullOrEmpty(_botToken) ? _botToken.Trim() : "");
             UBHPrefs.SetString(USER_ID_KEY, !string.IsNullOrEmpty(_userID) ? _userID.Trim() : "");
             UBHPrefs.SetString(GAME_TITLE_KEY, !string.IsNullOrEmpty(_gameTitle) ? _gameTitle.Trim() : "");
@@ -817,6 +873,11 @@ namespace Mopsicus.UBH {
             GUILayout.EndVertical();
             GUI.backgroundColor = Color.red;
             if (GUILayout.Button("Local build", GUILayout.Height(ACTION_HEIGHT))) {
+                if (string.IsNullOrEmpty(_gameTitle)) {
+                    if (EditorUtility.DisplayDialog("Error", "Game title is empty!", "Close")) {
+                        return;
+                    }
+                }
                 Close();
                 BuildResult result = Build();
                 string message = (result == BuildResult.Succeeded) ? "Build succeeded!" : "Build failed. See console logs :(";

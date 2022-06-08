@@ -6,10 +6,7 @@
         "GUID:eed29f14b3d2b4f4cbbc2a96074951e9"
     ],
     "includePlatforms": [
-        "Android",
-        "Editor",
-        "iOS",
-        "WebGL"
+        "Editor"
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

@@ -49,7 +49,10 @@ namespace Mopsicus.UBH {
         /// <param name="configs">Array of configs</param>
         private void CreateLauncherGradleFile(string[] configs) {
             using (StreamWriter file = File.CreateText(Path.Combine(_supportsPath, GradleFixer.LAUNCHER_GRADLE))) {
-                file.Write("apply plugin: 'com.google.gms.google-services'\n\n");
+                bool isGoogleServices = UBHPrefs.GetBool(UnityBuilderHelper.GOOGLE_SERVICES_KEY, false);
+                if (isGoogleServices) {
+                    file.Write("apply plugin: 'com.google.gms.google-services'\n\n");
+                }
                 file.Write("dependencies {\n");
                 for (int i = 0; i < configs.Length; i++) {
                     file.Write(AddDependency(configs[i]));
@@ -63,10 +66,13 @@ namespace Mopsicus.UBH {
         /// </summary>
         private void CreateBaseProjectGradleFile() {
             using (StreamWriter file = File.CreateText(Path.Combine(_supportsPath, GradleFixer.BASE_GRADLE))) {
+                bool isGoogleServices = UBHPrefs.GetBool(UnityBuilderHelper.GOOGLE_SERVICES_KEY, false);
                 file.Write("allprojects {\n");
                 file.Write("\tbuildscript {\n");
                 file.Write("\t\tdependencies {\n");
-                file.Write(AddClasspath("com.google.gms:google-services:4.3.10"));
+                if (isGoogleServices) {
+                    file.Write(AddClasspath("com.google.gms:google-services:4.3.10"));
+                }
                 file.Write("\t\t}\n\t}\n}");
             }
         }

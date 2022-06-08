@@ -85,6 +85,17 @@ namespace Mopsicus.UBH {
             if (File.Exists(destPath)) {
                 FileUtil.DeleteFileOrDirectory(destPath);
             }
+#if GOOGLE
+            bool isGoogleServices = UBHPrefs.GetBool(UnityBuilderHelper.GOOGLE_SERVICES_KEY, false);
+            if (!isGoogleServices) {
+                return;
+            }
+#elif HUAWEI
+            bool isHuaweiServices = UBHPrefs.GetBool(UnityBuilderHelper.HUAWEI_SERVICES_KEY, false);
+            if (!isHuaweiServices) {
+                return;
+            }
+#endif           
             File.Copy(filePath, destPath);
 #endif
         }

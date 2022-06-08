@@ -51,7 +51,8 @@ namespace Mopsicus.UBH {
             _lastValidatedPlatform = (PlatformType)UBHPrefs.GetInt(KEY, (int)PlatformType.UNKNOWN);
 #if HUAWEI
             if (_lastValidatedPlatform != PlatformType.HUAWEI) {
-                if (!File.Exists(Path.Combine(Application.dataPath, "StreamingAssets", HUAWEI_CONFIG))) {
+                bool isHuaweiServices = UBHPrefs.GetBool(UnityBuilderHelper.HUAWEI_SERVICES_KEY, false);
+                if (isHuaweiServices && !File.Exists(Path.Combine(Application.dataPath, "StreamingAssets", HUAWEI_CONFIG))) {
                     Debug.LogErrorFormat(string.Format("Huawei config \"{0}\" not found in StreamingAssets!", HUAWEI_CONFIG));
                     return;
                 }
@@ -68,7 +69,8 @@ namespace Mopsicus.UBH {
             }
 #elif GOOGLE
             if (_lastValidatedPlatform != PlatformType.GOOGLE) {
-                if (!File.Exists(Path.Combine(Application.dataPath, "StreamingAssets", GOOGLE_CONFIG))) {
+                bool isGoogleServices = UBHPrefs.GetBool(UnityBuilderHelper.GOOGLE_SERVICES_KEY, false);
+                if (isGoogleServices && !File.Exists(Path.Combine(Application.dataPath, "StreamingAssets", GOOGLE_CONFIG))) {
                     Debug.LogErrorFormat("Google config \"{0}\" not found in StreamingAssets!", GOOGLE_CONFIG);
                     return;
                 }
@@ -104,6 +106,10 @@ namespace Mopsicus.UBH {
                 return true;
             }
 #if GOOGLE
+            bool isGoogleKeystore = UBHPrefs.GetBool(UnityBuilderHelper.GOOGLE_KEYSTORE_KEY, false);
+            if (!isGoogleKeystore) {
+                return false;
+            }
             if (string.IsNullOrEmpty(UBHPrefs.GetString(UnityBuilderHelper.GOOGLE_PASSWORD_KEY))) {
                 Debug.LogError("KeyStore object in Config not completed");
                 return false;
@@ -114,6 +120,10 @@ namespace Mopsicus.UBH {
             PlayerSettings.Android.keyaliasPass = UBHPrefs.GetString(UnityBuilderHelper.GOOGLE_APASS_KEY);
             Debug.LogFormat("Keystore file loaded from: {0}", UBHPrefs.GetString(UnityBuilderHelper.GOOGLE_PATH_KEY));
 #elif HUAWEI
+            bool isHuaweiKeystore = UBHPrefs.GetBool(UnityBuilderHelper.HUAWEI_KEYSTORE_KEY, false);
+            if (!isHuaweiKeystore) {
+                return false;
+            }
             if (string.IsNullOrEmpty(UBHPrefs.GetString(UnityBuilderHelper.HUAWEI_PASSWORD_KEY))) {
                 Debug.LogError("KeyStore object in Config not completed");
                 return false;
