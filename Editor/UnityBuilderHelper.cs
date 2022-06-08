@@ -341,47 +341,47 @@ namespace Mopsicus.UBH {
         /// <summary>
         /// Path to keystore file
         /// </summary>
-        private string _googlePath = null;
+        private string _googlePath = "";
 
         /// <summary>
         /// Password for keystore
         /// </summary>        
-        private string _googlePassword = null;
+        private string _googlePassword = "";
 
         /// <summary>
         /// Alias in keystore
         /// </summary>        
-        private string _googleAlias = null;
+        private string _googleAlias = "";
 
         /// <summary>
         /// Password for alias
         /// </summary>        
-        private string _googleAliasPassword = null;
+        private string _googleAliasPassword = "";
 
         /// <summary>
         /// Path to keystore file
         /// </summary>
-        private string _huaweiPath = null;
+        private string _huaweiPath = "";
 
         /// <summary>
         /// Password for keystore
         /// </summary>
-        private string _huaweiPassword = null;
+        private string _huaweiPassword = "";
 
         /// <summary>
         /// Alias in keystore
         /// </summary>
-        private string _huaweiAlias = null;
+        private string _huaweiAlias = "";
 
         /// <summary>
         /// Password for alias
         /// </summary>
-        private string _huaweiAliasPassword = null;
+        private string _huaweiAliasPassword = "";
 
         /// <summary>
         /// Dependencies separated by comma
         /// </summary>
-        private string _huaweiDependencies = null;
+        private string _huaweiDependencies = "";
 
         /// <summary>
         /// Position for scroll view
@@ -709,9 +709,9 @@ namespace Mopsicus.UBH {
             UBHPrefs.SetBool(REMOTE_KEY, _remoteStatus);
             UBHPrefs.SetBool(ANDROID_KEY, _androidStatus);
             UBHPrefs.SetBool(IOS_KEY, _iosStatus);
-            UBHPrefs.SetString(BOT_TOKEN_KEY, _botToken.Trim());
-            UBHPrefs.SetString(USER_ID_KEY, _userID.Trim());
-            UBHPrefs.SetString(GAME_TITLE_KEY, _gameTitle.Trim());
+            UBHPrefs.SetString(BOT_TOKEN_KEY, !string.IsNullOrEmpty(_botToken) ? _botToken.Trim() : "");
+            UBHPrefs.SetString(USER_ID_KEY, !string.IsNullOrEmpty(_userID) ? _userID.Trim() : "");
+            UBHPrefs.SetString(GAME_TITLE_KEY, !string.IsNullOrEmpty(_gameTitle) ? _gameTitle.Trim() : "");
             UBHPrefs.SetString(GOOGLE_PATH_KEY, _googlePath);
             UBHPrefs.SetString(GOOGLE_PASSWORD_KEY, _googlePassword);
             UBHPrefs.SetString(GOOGLE_ALIAS_KEY, _googleAlias);
@@ -720,10 +720,10 @@ namespace Mopsicus.UBH {
             UBHPrefs.SetString(HUAWEI_PASSWORD_KEY, _huaweiPassword);
             UBHPrefs.SetString(HUAWEI_ALIAS_KEY, _huaweiAlias);
             UBHPrefs.SetString(HUAWEI_APASS_KEY, _huaweiAliasPassword);
-            UBHPrefs.SetString(HUAWEI_DEPS_KEY, _huaweiDependencies.Trim());
-            UBHPrefs.SetString(LOCALES_KEY, _locales.Trim());
-            UBHPrefs.SetString(FRAMEWORKS_KEY, _frameworks.Trim());
-            UBHPrefs.SetString(SUPPORT_FILES_KEY, _supportFiles.Trim());
+            UBHPrefs.SetString(HUAWEI_DEPS_KEY, !string.IsNullOrEmpty(_huaweiDependencies) ? _huaweiDependencies.Trim() : "");
+            UBHPrefs.SetString(LOCALES_KEY, !string.IsNullOrEmpty(_locales) ? _locales.Trim() : "");
+            UBHPrefs.SetString(FRAMEWORKS_KEY, !string.IsNullOrEmpty(_frameworks) ? _frameworks.Trim() : "");
+            UBHPrefs.SetString(SUPPORT_FILES_KEY, !string.IsNullOrEmpty(_supportFiles) ? _supportFiles.Trim() : "");
             UBHPrefs.SetBool(PUSH_KEY, _isPushes);
             UBHPrefs.SetBool(PURCHASE_KEY, _isPurchases);
             UBHPrefs.SetBool(SIGN_KEY, _isSignIn);

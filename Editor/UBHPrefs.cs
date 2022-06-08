@@ -113,7 +113,7 @@ namespace Mopsicus.UBH {
         /// </summary>
         /// <param name="key">Key</param>
         /// <param name="defaultValue">Default value</param>
-        public static string GetString(string key, string defaultValue = null) {
+        public static string GetString(string key, string defaultValue = "") {
             return Has(key) ? (string)_data[key] : defaultValue;
         }
 
